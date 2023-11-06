@@ -89,6 +89,11 @@ const EditItem = () => {
     }
   };
 
+  const handleCancel = () => {
+    // Navigate back to the item details page when cancel is clicked
+    window.location.href = `/item/${item_categories_name}/${item_id}`;
+  };  
+
   return (
     <div>
       <h2>Edit Item</h2>
@@ -157,6 +162,7 @@ const EditItem = () => {
       <button type="button" onClick={handleSaveChanges}>
         Save Changes
       </button>
+      <button type="button" onClick={handleCancel}>Cancel</button>
     </div>
   );
 };

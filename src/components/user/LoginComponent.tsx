@@ -20,11 +20,12 @@ const LoginComponent: React.FC = () => {
 
       if (userCredential && userCredential.user) {
         const user = userCredential.user;
+        const uid = user.uid;
         const idToken = await user.getIdToken();
         Cookies.set('token', idToken, { expires: 1 / 24 }); // Set cookie to expire in 1 hour
 
         axios 
-          .post('http://localhost:8000/users/login', {}, { 
+          .post('http://localhost:8000/users/login', {uid, idToken}, { 
           headers: { Authorization: `Bearer ${idToken}` } // Fixed the header format 
           }) 
           .then((response) => { 

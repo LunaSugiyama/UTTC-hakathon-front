@@ -7,7 +7,7 @@ import Logout from './user/Logout';
 
 interface ItemWithCurriculum {
   ID: number;
-  UserID: number;
+  UserFirebaseUID: number;
   Title: string;
   Author: string;
   Link: string;
@@ -125,6 +125,9 @@ return (
   <div>
     <h2>Welcome to the Home page!</h2>
     <form>
+      <Link to="/user">
+        <button type="button">Go to User Page</button>
+      </Link>
       <label htmlFor="sort">Sort By:</label>
         <select id="sort" value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="created_at">Created At</option>
@@ -173,7 +176,7 @@ return (
         <li key={item.ID}>
           <Link to={`/item/${item.ItemCategoriesName}/${item.ID}`}>
             <button>
-              User ID: {item.UserID} <br />
+              User ID: {item.UserFirebaseUID} <br />
               Title: {item.Title} <br />
               Author: {item.Author} <br />
               Link: {item.Link} <br />

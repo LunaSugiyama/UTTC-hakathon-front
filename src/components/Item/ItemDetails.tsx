@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import StarButton from './StarItem';
+import LikeButton from './LikeItem';
+import LikeCount from './LikeCount';
 import { ItemDetails as ItemDetailsType } from '../../interfaces/ItemDetails';
 
 const ItemDetails: React.FC = () => {
@@ -13,14 +15,17 @@ const ItemDetails: React.FC = () => {
   const token = Cookies.get('token');
   const [loadStarButton, setLoadStarButton] = useState(false);
   const [isItemStarred, setIsItemStarred] = useState(false);
+  const [isItemLiked, setIsItemLiked] = useState(false);
+  const [loadLikeButton, setLoadLikeButton] = useState(false);
+  const [likeCount, setLikeCount] = useState<number | null>(null);
 
   const handleDeleteItem = () => {
     if (item) {
       axios
-      .delete(`http://localhost:8000/${category}/delete`, {
-        data: { id: item.id }, // Send the ID as raw JSON in the request body
-        headers: { Authorization: `Bearer ${token}` },
-      })
+        .delete(`http://localhost:8000/${category}/delete`, {
+          data: { id: item.id }, // Send the ID as raw JSON in the request body
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((response) => {
           console.log(response);
           window.location.href = '/home';
@@ -29,6 +34,30 @@ const ItemDetails: React.FC = () => {
           console.error('Error deleting item: ', error);
         });
     }
+  };
+
+  const handleLike = () => {
+    if (item) {
+      setIsItemLiked(true); // Update the liked state
+      // Fetch and update the like count
+      fetchLikeCount(item.id, item.item_categories_id);
+    }
+  };
+  
+  
+
+  const fetchLikeCount = (itemId: number, itemCategoriesId: number) => {
+    // Make an API request to get the like count for the specified item
+    axios
+      .get(`http://localhost:8000/items/countlikes?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setLikeCount(response.data.count);
+      })
+      .catch((error) => {
+        console.error('Error fetching like count:', error);
+      });
   };
 
   useEffect(() => {
@@ -44,6 +73,8 @@ const ItemDetails: React.FC = () => {
           setItem(response.data);
           setLoadStarButton(true);
           setIsItemStarred(response.data.is_starred);
+          setLoadLikeButton(true);
+          setIsItemLiked(response.data.is_liked);
         })
         .catch((error) => {
           console.error('Error fetching item details: ', error);
@@ -73,14 +104,14 @@ const ItemDetails: React.FC = () => {
     } else {
       setLoadingCurriculumNames(false);
     }
-  }, [item]);
+  }, [item, token]);
 
   return (
     <div>
       {item ? (
         <div>
           <h2>Item Details</h2>
-          <Link to ="/home">
+          <Link to="/home">
             <button>Back to Home</button>
           </Link>
           <p>ID: {item.id}</p>
@@ -88,11 +119,13 @@ const ItemDetails: React.FC = () => {
           <p>Title: {item.title}</p>
           <p>Author: {item.author}</p>
           <p>Link: {item.link}</p>
-          <p>Likes: {item.likes}</p>
+          <LikeCount itemID={item.id} itemCategoriesID={item.item_categories_id} isItemLiked={isItemLiked}/>
           <p>Item Category: {item.item_categories_name}</p>
           <p>Explanation: {item.explanation}</p>
           <p>Curriculum: {loadingCurriculumNames ? 'Loading...' : curriculumNames.join(', ')}</p>
-          <Link to={`/item/${item ? item.item_categories_name : 'loading'}/${item ? item.id : 'loading'}/edit`}>
+          <Link
+            to={`/item/${item ? item.item_categories_name : 'loading'}/${item ? item.id : 'loading'}/edit`}
+          >
             <button>Edit Item</button>
           </Link>
           {loadStarButton && (
@@ -103,8 +136,13 @@ const ItemDetails: React.FC = () => {
               }}
             />
           )}
+          {loadLikeButton && (
+            <LikeButton
+              item={{ id: item.id, isLiked: isItemLiked, item_categories_id: item.item_categories_id }}
+              onLike={() => handleLike()}
+            />
+          )}
           <button onClick={handleDeleteItem}>Delete Item</button>
-          {/* Add more details as needed */}
         </div>
       ) : (
         <p>Loading...</p>
