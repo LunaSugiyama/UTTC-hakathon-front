@@ -74,6 +74,7 @@ const CreateItem = () => {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((response) => {
+      window.location.href = `/home`;
         // Handle success, e.g., show a success message or redirect to another page
       })
       .catch((error) => {

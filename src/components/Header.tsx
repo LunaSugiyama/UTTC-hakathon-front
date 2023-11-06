@@ -12,7 +12,7 @@ const Header: React.FC = () => {
             <Link to="/login">Login</Link>
           </li>
           <li>
-            <Link to="/signup">Signup</Link>
+            <Link to="/signupform">Signup</Link>
           </li>
         </ul>
       </nav>
