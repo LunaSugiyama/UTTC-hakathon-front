@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import StarButton from './StarItem';
 import LikeButton from './LikeItem';
 import LikeCount from './LikeCount';
 import { ItemDetails as ItemDetailsType } from '../../interfaces/ItemDetails';
+import { Comment } from '../../interfaces/Comment';
+import CommentInput from './sub-components/CommentInput';
+import CommentList from './sub-components/CommentList';
+
 
 const ItemDetails: React.FC = () => {
   const { id, category }: { id?: string; category?: string } = useParams();
@@ -18,6 +22,18 @@ const ItemDetails: React.FC = () => {
   const [isItemLiked, setIsItemLiked] = useState(false);
   const [loadLikeButton, setLoadLikeButton] = useState(false);
   const [likeCount, setLikeCount] = useState<number | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]); 
+
+  // come back to the same home page
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const sortParam = queryParams.get('sort');
+  const orderParam = queryParams.get('order');
+  const categoryParam = queryParams.get('category');
+  const pageParam = queryParams.get('page');
+  const page_sizeParam = queryParams.get('page_size');
+  const backToHomeLink = `/home?sort=${sortParam}&order=${orderParam}&category=${categoryParam}&page=${pageParam}&page_size=${page_sizeParam}`;
+  console.log('backToHomeLink', backToHomeLink);
 
   const handleDeleteItem = () => {
     if (item) {
@@ -28,7 +44,7 @@ const ItemDetails: React.FC = () => {
         })
         .then((response) => {
           console.log(response);
-          window.location.href = '/home';
+          window.location.href = backToHomeLink
         })
         .catch((error) => {
           console.error('Error deleting item: ', error);
@@ -57,6 +73,17 @@ const ItemDetails: React.FC = () => {
       })
       .catch((error) => {
         console.error('Error fetching like count:', error);
+      });
+  };
+
+  const fetchComments = (itemId: number, itemCategoriesId: number) => {
+    axios
+      .get(`http://localhost:8000/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`)
+      .then((response) => {
+        setComments(response.data.comments);
+      })
+      .catch((error) => {
+        console.error('Error fetching comments:', error);
       });
   };
 
@@ -111,9 +138,13 @@ const ItemDetails: React.FC = () => {
       {item ? (
         <div>
           <h2>Item Details</h2>
-          <Link to="/home">
-            <button>Back to Home</button>
-          </Link>
+          <Link to={backToHomeLink}>Back to Home</Link>
+          <h3>Images</h3>
+          <div className="image-container">
+            {item.images.map((imageLink, index) => (
+              <img key={index} src={imageLink} alt={`Image ${index}`} />
+            ))}
+          </div>
           <p>ID: {item.id}</p>
           <p>User ID: {item.user_id}</p>
           <p>Title: {item.title}</p>
@@ -143,6 +174,11 @@ const ItemDetails: React.FC = () => {
             />
           )}
           <button onClick={handleDeleteItem}>Delete Item</button>
+          <CommentInput
+            item={{ item_id: item.id, item_categories_id: item.item_categories_id }}
+            onCommentSubmit={() => fetchComments(item.id, item.item_categories_id)}
+          />
+          <CommentList item_id={item.id} item_categories_id={item.item_categories_id} comments={comments} />
         </div>
       ) : (
         <p>Loading...</p>

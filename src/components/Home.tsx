@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useLocation } from 'react-router-dom';
 import axios from 'axios';
 import CurriculumCheckbox from './curriculum/Checkbox'; // Import the CurriculumCheckbox component
 import Cookies from 'js-cookie';
@@ -36,14 +36,20 @@ const Home: React.FC = () => {
   const [curriculumIds, setCurriculumIds] = useState<number[]>([]);
   const [curriculumData, setCurriculumData] = useState<any[]>([]);
   const [ItemCategoriesIds, setItemCategoriesIds] = useState<number[]>([]);
-  const [itemCategoriesData, setItemCategoriesData] = useState<ItemCategory[]>([]);
+  const [itemCategoriesData, setItemCategoriesData] = useState<ItemCategory[]>([]); // Initialize as an empty array
+  const [page, setPage] = useState(1);
+  const [page_size, setPage_size] = useState(10);
+
+  const location = useLocation();
 
   const [selectedCurriculumIds, setSelectedCurriculumIds] = useState<number[]>([]);
 
   const fetchData = () => {
+    setData([]); // Clear the data before fetching new data
+
     axios
       .get(
-        `http://localhost:8000/items/showall?sort=${sort}&order=${order}&item_categories=${ItemCategoriesIds.join(',')}&curriculum_ids=${selectedCurriculumIds.join(',')}`, {
+        `http://localhost:8000/items/showall?sort=${sort}&order=${order}&item_categories=${ItemCategoriesIds.join(',')}&curriculum_ids=${selectedCurriculumIds.join(',')}&page=${page}&page_size=${page_size}`, {
           headers: { Authorization: `Bearer ${token}` }
         }
       )
@@ -85,20 +91,53 @@ const Home: React.FC = () => {
       });
   };
 
-  const handleApplyFilters = () => {
-    setData([]); // Clear the data before fetching new data
-    fetchData();
-  };
+    const handleApplyFilters = () => {
+      setData([]); // Clear the data before fetching new data
+      setPage(1); // Reset the page to 1
+    
+      // Update the URL query parameters
+      const params = new URLSearchParams(location.search);
+      params.set('sort', sort);
+      params.set('order', order);
+      params.set('category', ItemCategoriesIds.join(','));
+      params.set('page', String(page));
+      params.set('page_size', String(page_size));
+      console.log('item_categories(appliedFilter)', ItemCategoriesIds.join(',') );
+
+    
+      // Replace the URL without causing a full page reload
+      window.history.replaceState({}, '', `${location.pathname}?${params}`);
+      fetchData();
+    };
+
 
   const handleCreateItem = () => {
     window.location.href = '/item/create-item';
   }
 
   useEffect(() => {
-    fetchData(); // Fetch data when the component mounts
+    
+    const params = new URLSearchParams(location.search);
+    const sortParam = params.get('sort');
+    const orderParam = params.get('order');
+    const categoryParam = params.get('category');
+    console.log('categoryParam(useEffect)', categoryParam);
+    const pageParam = params.get('page');
+    const page_sizeParam = params.get('page_size');
+    window.history.replaceState({}, '', `${location.pathname}?${params}`);
+    // Initialize your state with the URL parameters
+    setSort(sortParam || 'created_at');
+    setOrder(orderParam || 'asc');
+    setItemCategoriesIds(categoryParam ? categoryParam.split(',').map(Number) : []);
+    console.log('item_categories(useEffect)', ItemCategoriesIds.join(',') );
+    setPage(Number(pageParam) || 1);
+    setPage_size(Number(page_sizeParam) || 10);
+    setData([]); // Clear the data before fetching new data
     fetchCurriculumData(); // Fetch curriculum data when the component mounts
     fetchItemCategories(); // Fetch item categories when the component mounts
-  }, []); // Moved the curriculum data fetching to a useEffect
+    // handleApplyFilters();
+    fetchData(); // Fetch data when the component mounts
+  }, [location.search, page]); // Moved the curriculum data fetching to a useEffect
 
 
   const handleCheckboxChange = (curriculumId: number) => {
@@ -120,6 +159,13 @@ const Home: React.FC = () => {
     }
   };
 
+  const handlePageChange = (page: number) => {
+    console.log(page);
+    setPage(page);
+    setData([]); // Clear the data before fetching new data
+    fetchData();
+  }
+
 
 return (
   <div>
@@ -139,8 +185,9 @@ return (
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
-      <label>Item Categories:</label>
-        {itemCategoriesData && itemCategoriesData.map((category: ItemCategory) => (
+        <label>Item Categories:</label>
+      {itemCategoriesData !== null ? (
+        itemCategoriesData.map((category: ItemCategory) => (
           <label key={category.ID}>
             <input
               type="checkbox"
@@ -150,7 +197,10 @@ return (
             />
             {category.Name}
           </label>
-        ))}
+        ))
+      ) : (
+        <p>Loading item categories...</p> // You can add a loading indicator here
+      )}
       <div>
       <label>Curriculum IDs:</label>
       {/* {curriculumData && curriculumData.map((curriculum) => ( */}
@@ -170,27 +220,56 @@ return (
       </button>
       < Logout />
     </form>
-
     <ul>
-      {data.map((item) => (
-        <li key={item.ID}>
-          <Link to={`/item/${item.ItemCategoriesName}/${item.ID}`}>
-            <button>
-              User ID: {item.UserFirebaseUID} <br />
-              Title: {item.Title} <br />
-              Author: {item.Author} <br />
-              Link: {item.Link} <br />
-              Likes: {item.Likes} <br />
-              Item Category: {item.ItemCategoriesName} <br />
-              Created At: {item.CreatedAt} <br />
-              Updated At: {item.UpdatedAt} <br />
-              Curriculum ID: {item.CurriculumID} <br />
-              Curriculum IDs: {item.CurriculumIDs.join(', ')}
-            </button>
-          </Link>
-        </li>
-      ))}
-    </ul>
+  {data && data.map((item) => (
+    <li key={item.ID}>
+      <Link
+        to={{
+          pathname: `/item/${item.ItemCategoriesName}/${item.ID}`,
+          search: `?sort=${sort}&order=${order}&category=${ItemCategoriesIds.join(',')}&page=${page}&page_size=${page_size}`,
+        }}
+        target="_blank"
+      > 
+        <button>
+          User ID: {item.UserFirebaseUID} <br />
+          Title: {item.Title} <br />
+          Author: {item.Author} <br />
+          Link: {item.Link} <br />
+          Likes: {item.Likes} <br />
+          Item Category: {item.ItemCategoriesName} <br />
+          Created At: {item.CreatedAt} <br />
+          Updated At: {item.UpdatedAt} <br />
+          Curriculum IDs: {item.CurriculumIDs.join(', ')}
+        </button>
+      </Link>
+    </li>
+  ))}
+  {!data && <p>No items available.</p>}
+</ul>
+    <div>
+      <button
+        onClick={() => {
+          if (page > 1 && data) {
+            handlePageChange(page - 1);
+          }
+        }}
+        disabled={page === 1}
+      >
+        Previous
+      </button>
+      <span> Page {page} </span>
+      <button
+        onClick={() => {
+          // Check if there's more data to fetch based on page_size
+          if (data && data.length === page_size) {
+            handlePageChange(page + 1);
+          }
+        }}
+        disabled={data && data.length < page_size}
+      >
+        Next
+      </button>
+    </div>
   </div>
 );
 };

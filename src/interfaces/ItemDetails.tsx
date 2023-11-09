@@ -10,5 +10,6 @@ export interface ItemDetails {
     explanation: string;
     curriculum_ids: number[];
     is_starred: boolean;
+    images: string[];
     // Add other properties as needed
   }

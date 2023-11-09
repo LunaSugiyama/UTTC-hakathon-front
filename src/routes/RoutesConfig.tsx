@@ -9,6 +9,8 @@ import UserPage from '../components/user/UserPage';
 import Header from '../components/Header';
 import EditItem from '../components/Item/EditItem';
 import SignupForm from '../SignupForm';
+import GoogleLoginForm from '../GoogleLoginForm';
+import SearchItem from '../components/Item/SearchItem';
 
 const RoutesConfig: React.FC = () => (
   <Router>
@@ -16,10 +18,12 @@ const RoutesConfig: React.FC = () => (
       <Routes>
         <Route path="/" element={<Header />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/home/search" element={<SearchItem />} />
         <Route path="/item/:category/:id" element={<ItemDetails />} />
         <Route path="/item/:item_categories_name/:item_id/edit" element={<EditItem />} />
         <Route path="/signup" element={<SignupComponent />} />
         <Route path="/login" element={<LoginComponent />} />
+        <Route path="/google-login" element={<GoogleLoginForm />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="/item/create-item" element={<CreateItem />} />
         <Route path="/signupform" element={<SignupForm />} />
