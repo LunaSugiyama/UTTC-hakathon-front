@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { fireAuth } from '../../firebase';
+import { fireAuth } from '../../../firebase';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import IconButton from '@mui/material/IconButton';
 
 interface StarButtonProps {
   item: { id: number; isStarred: boolean; item_categories_id: number };
@@ -128,9 +131,19 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
   
 
   return (
-    <button onClick={toggleStar}>
-      {isStarred ? 'Unstar' : 'Star'}
-    </button>
+<IconButton
+  onClick={toggleStar}
+  aria-label={isStarred ? 'Unstar' : 'Star'}
+  sx={{
+    color: isStarred ? '#ffc107' : '#e0e0e0', // gold color for starred, light gray for unstarred
+    '&:hover': {
+      bgcolor: 'transparent', // remove the default grey background on hover
+      fontSize: '4rem', // increase the font size on hover
+    },
+  }}
+>
+  {isStarred ? <StarIcon fontSize='large'/> : <StarBorderIcon fontSize='large'/>}
+</IconButton>
   );
 };
 

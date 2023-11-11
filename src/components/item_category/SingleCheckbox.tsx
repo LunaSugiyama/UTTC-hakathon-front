@@ -3,6 +3,21 @@ import axios from 'axios';
 import {ItemCategory} from '../../interfaces/ItemCategory';
 import Cookies from 'js-cookie';
 
+// MUI
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#4caf50', // a shade of green
+    },
+    // ... other theme properties if needed
+  },
+  // ... other theme customization
+});
+
 interface SingleCheckboxProps {
   selectedCategoryId: number | null;
   onCheckboxChange: (categoryId: number | null, name: string | null) => void;
@@ -38,22 +53,26 @@ const SingleCheckbox: React.FC<SingleCheckboxProps> = ({
     }
   };
   
-
-     return (
-    <div>
-      <h3>Item Categories: </h3>
-        {itemCategories.map((category: ItemCategory) => (
-          <label key={category.ID}>
-            <input
-                type="checkbox"
-                checked={category.ID === selectedCategoryId}
-                onChange={() => handleItemCategoryChange(category)}  
+    return (
+      <ThemeProvider theme={theme}>
+        <div>
+          <h3>Item Categories: </h3>
+          {itemCategories.map((category) => (
+            <FormControlLabel
+              key={category.ID}
+              control={
+                <Checkbox
+                  checked={category.ID === selectedCategoryId}
+                  onChange={() => handleItemCategoryChange(category)}  
+                  color="primary" // use the theme's primary color
+                />
+              }
+              label={category.Name}
             />
-            {category.Name}
-            </label>
-        ))}
-    </div>
-  );
-};
+          ))}
+        </div>
+      </ThemeProvider>
+    );
+  };
 
 export default SingleCheckbox;

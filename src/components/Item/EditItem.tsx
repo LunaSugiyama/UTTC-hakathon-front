@@ -5,7 +5,20 @@ import SingleCheckbox from '../item_category/SingleCheckbox';
 import Cookies from 'js-cookie';
 import { fireAuth } from '../../firebase';
 import { ItemDetails } from '../../interfaces/ItemDetails';
+import Layout from '../../item/layout/Layout';
 import { useParams } from 'react-router-dom';
+import CustomTheme  from '../../item/theme/CustomTheme';
+import { ThemeProvider } from '@mui/material/styles';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  FormControl,
+} from '@mui/material';
 
 const EditItem = () => {
   const [formData, setFormData] = useState<{
@@ -95,39 +108,52 @@ const EditItem = () => {
   };  
 
   return (
-    <div>
-      <h2>Edit Item</h2>
+    <Layout>
+    <ThemeProvider theme={CustomTheme}>
+      <Container maxWidth="sm">
+        <Typography variant="h4" component="h2" gutterBottom sx={{ marginTop: 2 }}>
+          Edit Item
+        </Typography>
       <form>
-        <label>Title:</label>
-        <input
-          type="text"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          disabled={!isEditing}
-        />
-        <label>Author:</label>
-        <input
-          type="text"
+      <TextField
+            label="Title"
+            variant="outlined"
+            fullWidth
+            value={formData.title}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
+            disabled={!isEditing}
+            sx={{ mb: 2 }}
+          />
+        <TextField
+          label="Author"
+          variant="outlined"
+          fullWidth
           value={formData.author}
           onChange={(e) => setFormData({ ...formData, author: e.target.value })}
           disabled={!isEditing}
+          sx={{ mb: 2 }}
         />
-        <label>Link:</label>
-        <input
-          type="text"
+        <TextField
+          label="Link"
+          variant="outlined"
+          fullWidth
           value={formData.link}
           onChange={(e) => setFormData({ ...formData, link: e.target.value })}
           disabled={!isEditing}
+          sx={{ mb: 2 }}
         />
-        <label>Explanation:</label>
-        <input
-          type="text"
+        <TextField
+          label="Explanation"
+          variant="outlined"
+          fullWidth
           value={formData.explanation}
           onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
           disabled={!isEditing}
+          sx={{ mb: 2 }}
         />
         <div>
-          <label>Curriculum:</label>
           <CurriculumCheckbox
             selectedCurriculumIds={formData.curriculum_ids}
             onCheckboxChange={(id) => {
@@ -159,11 +185,13 @@ const EditItem = () => {
           />
         </div>
       </form>
-      <button type="button" onClick={handleSaveChanges}>
+      <Button variant="contained" color="primary" onClick={handleSaveChanges}>
         Save Changes
-      </button>
-      <button type="button" onClick={handleCancel}>Cancel</button>
-    </div>
+      </Button>
+      <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
+      </Container>
+    </ThemeProvider>
+    </Layout>
   );
 };
 
