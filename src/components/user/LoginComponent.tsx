@@ -32,7 +32,7 @@ const LoginComponent: React.FC = () => {
           if (response.data && response.data.token) { 
           setToken(response.data.token); 
           setMessage('Login successful'); 
-          navigate('/home'); 
+          navigate('/item'); 
           } else { 
           setMessage('Login failed: Invalid response data'); 
           } 

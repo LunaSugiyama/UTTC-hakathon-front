@@ -1,7 +1,12 @@
 import React, { useState, useEffect} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { fireAuth } from "../../firebase";
+import { fireAuth } from "../../../firebase";
+
+// MUI
+import Button from '@mui/material/Button';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 
 interface LikeButtonProps {
     item: { id: number; isLiked: boolean; item_categories_id: number };
@@ -94,9 +99,21 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
     };
 
     return (
-        <button onClick={toggleLike}>
+        <Button
+            variant="contained"
+            startIcon={isLiked ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
+            onClick={toggleLike}
+            sx={{
+                textTransform: 'none',
+                backgroundColor: isLiked ? 'green' : 'white',
+                color: isLiked ? 'white' : 'black', // Assuming you want text color to be black when the button is white
+                '&:hover': {
+                    backgroundColor: isLiked ? '#a5d6a7' : '#eeeeee', // Lighter red for hover on liked, light gray for unliked
+                },
+            }}
+        >
             {isLiked ? "Unlike" : "Like"}
-        </button>
+        </Button>
     );
 };
 

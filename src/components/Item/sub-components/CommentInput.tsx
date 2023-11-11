@@ -4,6 +4,10 @@ import Cookies from 'js-cookie';
 import { fireAuth } from '../../../firebase';
 import { on } from 'events';
 
+// MUI
+import { TextField, Button, Box } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+
 // Define the item object properties with data types
 interface Item {
   item_id: number;
@@ -45,16 +49,35 @@ const CommentInput: React.FC<CommentInputProps> = ({ item, onCommentSubmit }) =>
     }
   };
 
-  return (
-    <div>
-      <textarea
-        placeholder="Add your comment here..."
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Submit Comment</button>
-    </div>
-  );
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2, // Spacing between elements
+          margin: '16px 0',
+        }}
+      >
+        <TextField
+          multiline
+          placeholder="Add your comment here..."
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          variant="outlined"
+          rows={4}
+          fullWidth
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<SendIcon />}
+          onClick={handleSubmit}
+          disabled={!comment.trim()} // Disable the button if the comment is empty
+        >
+          Submit Comment
+        </Button>
+      </Box>
+    );
 };
 
 export default CommentInput;

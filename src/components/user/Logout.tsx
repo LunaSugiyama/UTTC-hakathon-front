@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Button } from '@mui/material';
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -15,7 +16,13 @@ const Logout = () => {
 
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
+      <Button 
+        onClick={handleLogout}
+        variant="contained" 
+        style={{ backgroundColor: '#81c784', color: 'white' }} // Light green background with white text
+      >
+        Logout
+      </Button>
     </div>
   );
 };

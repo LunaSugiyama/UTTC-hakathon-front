@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+import { Typography } from '@mui/material';
+
 interface LikeCountProps {
   itemID: number;
   itemCategoriesID: number;
@@ -27,9 +29,9 @@ const LikeCount: React.FC<LikeCountProps> = ({ itemID, itemCategoriesID, isItemL
   return (
     <div>
       {likeCount === null ? (
-        <p>Loading like count...</p>
+        <Typography>Loading like count...</Typography>
       ) : (
-        <p>Number of Likes: {likeCount}</p>
+        <Typography>Likes: {likeCount}</Typography>
       )}
     </div>
   );

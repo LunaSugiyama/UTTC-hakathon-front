@@ -1,14 +1,15 @@
 export interface Item {
-    Id: number;
+    UniqueId: string;
+    ID: number;
     UserFirebaseUID: number;
     Title: string;
     Author: string;
     Link: string;
     Likes: number;
-    ItemCategoriesId: number;
+    ItemCategoriesID: number;
     ItemCategoriesName: string;
     Explanation: string;
-    CurriculumIds: number[];
+    CurriculumIDs: number[];
     IsStarred: boolean;
     Images: string[];
     CreatedAt: string;

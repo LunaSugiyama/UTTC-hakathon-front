@@ -4,7 +4,6 @@ import axios from 'axios';
 import CurriculumCheckbox from './curriculum/Checkbox'; // Import the CurriculumCheckbox component
 import Cookies from 'js-cookie';
 import Logout from './user/Logout';
-import { ItemCategory } from '../interfaces/ItemCategory';
 
 interface ItemWithCurriculum {
   ID: number;
@@ -20,6 +19,14 @@ interface ItemWithCurriculum {
   CurriculumID: number;
   CurriculumIDs: number[];
 }
+
+interface ItemCategory {
+  ID: number;
+  Name: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+}
+
 
 const Home: React.FC = () => {
   const token = Cookies.get('token');

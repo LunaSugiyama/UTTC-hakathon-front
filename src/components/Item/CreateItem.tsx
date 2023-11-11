@@ -6,6 +6,43 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import CurriculumCheckbox from '../curriculum/Checkbox';
 import SingleCheckbox from '../item_category/SingleCheckbox';
 
+// MUI
+import { Button, TextField, ThemeProvider, createTheme, FormGroup, Paper, Typography, Box, CircularProgress } from '@mui/material';
+
+// Create a green theme.
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#4caf50', // Main green color
+      contrastText: '#ffffff', // White text for contrast
+    },
+    // ... other theme properties
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#ffffff', // Grey background for TextField
+          input: {
+            color: '#000000', // White text color for TextField
+          },
+          label: {
+            color: '#424242', // White label color
+          }
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          color: '#ffffff', // White text color for Button
+        }
+      }
+    }
+  }
+  // ... other theme customization
+});
+
 const CreateItem = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -107,23 +144,29 @@ const handleSubmit = async () => {
   const imageUrls = await uploadImages();
   const user = fireAuth.currentUser;
   const firebase_UID = user ? user.uid : null;
+  setLoading(true);
 
   if (imageUrls) {
     if (!formData.item_categories_id) {
+      setLoading(false);
       setErrorMessage('Please select a category.');
     } else if (!formData.curriculum_ids.length) {
+      setLoading(false);
       setErrorMessage('Please select at least one curriculum.');
     } else if (!formData.title) {
+      setLoading(false);
       setErrorMessage('Please enter a title.');
     } else if (!formData.author) {
+      setLoading(false);
       setErrorMessage('Please enter an author.');
     } else if (!formData.link) {
+      setLoading(false);
       setErrorMessage('Please enter a link.');
     } else if (!formData.explanation) {
+      setLoading(false);
       setErrorMessage('Please enter an explanation.');
     } else {
       setErrorMessage(''); // Clear any previous error message
-      setLoading(true);
       const token = Cookies.get('token');
 
       const dataToSend = {
@@ -146,49 +189,68 @@ const handleSubmit = async () => {
           setLoading(false);
           console.error('Error creating item: ', error);
         });
+        setLoading(false);
     }
   }
 };
 
-
-
-  return (
-    <div>
-      <h2>Create a New Item</h2>
-      {loading && <p>Item is being created...</p>} {/* Display loading message */}
+    return (
+    <ThemeProvider theme={theme}>
+      <Box sx={{ width: '100%', maxWidth: 500, mx: 'auto' }}>
+        <h2>Create a New Item</h2>
+        {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress 
+          color="primary" // This uses the primary color from your theme, which is green
+          style={{ display: 'block', margin: 'auto' }} // Center the CircularProgress
+        />
+      </Box>
+      )}        
       <form>
-        <label>Title:</label>
-        <input
-          type="text"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        />
-        <label>Author:</label>
-        <input
-          type="text"
-          value={formData.author}
-          onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-        />
-        <label>Link:</label>
-        <input
-          type="text"
-          value={formData.link}
-          onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-        />
-        <label>Explanation:</label>
-        <input
-          type="text"
-          value={formData.explanation}
-          onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
-        />
-        <label>Image:</label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImageChange}
-        />
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          <TextField
+            label="Title"
+            fullWidth
+            margin="normal"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          />
+          <TextField
+            label="Author"
+            fullWidth
+            margin="normal"
+            value={formData.author}
+            onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+          />
+          <TextField
+            label="Link"
+            fullWidth
+            margin="normal"
+            value={formData.link}
+            onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+          />
+          <TextField
+            label="Explanation"
+            fullWidth
+            margin="normal"
+            value={formData.explanation}
+            onChange={(e) => setFormData({ ...formData, explanation: e.target.value })}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            style={{ margin: 'normal' }} // use inline style for margin
+            component="label" // this makes the button act like a file input
+          >
+            Upload Image
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              onChange={handleImageChange}
+            />
+          </Button>
+          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         {formData.images.map((image, index) => (
           <div key={index}>
             <img 
@@ -201,8 +263,8 @@ const handleSubmit = async () => {
             </button>
           </div>
         ))}
-        <div>
-          <CurriculumCheckbox
+         <div>
+           <CurriculumCheckbox
             selectedCurriculumIds={formData.curriculum_ids}
             onCheckboxChange={handleCheckboxChange}
           />
@@ -213,12 +275,14 @@ const handleSubmit = async () => {
             onCheckboxChange={handleSingleCheckboxChange}
           />
         </div>
-        <button type="button" onClick={handleSubmit}>
-          Create
-        </button>
-      </form>
-    </div>
-  );
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
+            Create
+          </Button>
+        </form>
+      </Box>
+    </ThemeProvider>
+    );
 };
+
 
 export default CreateItem;

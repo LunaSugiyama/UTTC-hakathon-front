@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Comment } from '../../../interfaces/Comment';
 
+//MUI
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import { formatDistanceToNow } from 'date-fns'; // For relative timestamps
+
 interface CommentListProps {
   item_id: number;
   item_categories_id: number;
@@ -30,22 +38,41 @@ const CommentList: React.FC<CommentListProps> = ({ item_id, item_categories_id, 
       });
   }, [item_id, item_categories_id, comments]);
 
-  return (
-    <div>
-      {commentList.length === 0 ? ( 
-      <p>No comments yet!</p>
-      ) : ( 
-      <div>
-        <h3>Comments: {commentList.length}</h3>
-          <ul>
-            {commentList.map((comment) => (
-              <li key={comment.id}>{comment.comment}</li>
-            ))}
-          </ul>
-      </div>
-      )}
-    </div>
-  );
+    return (
+      <Paper elevation={4} sx={{ padding: 2 }}>
+        {commentList.length === 0 ? (
+          <Typography variant="subtitle1">No comments yet!</Typography>
+        ) : (
+          <div>
+            <Typography variant="h6" gutterBottom>
+              Comments: {commentList.length}
+            </Typography>
+            <List dense>
+              {commentList.map((comment) => (
+                <ListItem key={comment.id} alignItems="flex-start">
+                  <ListItemText
+                    primary={comment.comment}
+                    secondary={
+                      <>
+                        <Typography
+                          sx={{ display: 'inline' }}
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          {comment.name} - 
+                        </Typography>
+                        {formatDistanceToNow(new Date(comment.updated_at), { addSuffix: true })}
+                      </>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        )}
+      </Paper>
+    );
 };
 
 export default CommentList;
