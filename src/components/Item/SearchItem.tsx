@@ -11,8 +11,9 @@ import BookIcon from '@mui/icons-material/Book';
 import BlogIcon from '@mui/icons-material/Article'; // Example icon for blogs
 import VideoIcon from '@mui/icons-material/OndemandVideo';
 import Layout from '../../item/layout/Layout';
-import Tree from '../../item/tree.png';
+import Tree from '../../item/tree4.png';
 import getIconForCategory from '../../item/icons/GetIconForCategory';
+import { accordionStyle, accordionSummaryStyle, accordionDetailsStyle } from '../curriculum/Checkbox';
 
 // MUI
 import { Button, FormControlLabel, List, ListItem, ListItemText, Paper, ThemeProvider, createTheme, TextField, Select, MenuItem, SelectChangeEvent, Container,
@@ -197,15 +198,21 @@ const SearchItem: React.FC = () => {
         window.location.href = '/item/create-item';
       }
 
-    const [expanded, setExpanded] = useState<string | false>(false);
-    const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panel : false);
-    };
 
-    const handleExpandClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, panel: string) => {
-        event.stopPropagation(); // Prevents the accordion summary's navigation action
-        handleAccordionChange(panel)(event, expanded !== panel);
-    };
+      const [expanded, setExpanded] = useState<string | false>(false);
+      const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+          setExpanded(isExpanded ? panel : false);
+      };
+    
+      const [expandedAccordions, setExpandedAccordions] = useState<{ [key: string]: boolean }>({});
+    
+      // Function to toggle accordion expansion
+      const handleAccordionToggle = (id: string) => (event: React.SyntheticEvent) =>{
+        setExpandedAccordions(prevState => ({
+          ...prevState,
+          [id]: !prevState[id]
+        }));
+      };
 
     const handleItemCategoriesCheckboxChange = (categoryId: number) => {
         setItemCategoriesIds((prevItemCategoriesIds) => {
@@ -229,11 +236,10 @@ const SearchItem: React.FC = () => {
         <img 
         src={Tree} // Make sure this import is correctly pointing to your image file
         alt="Tree"
-        style={{ alignSelf: 'center', height: '350px', marginLeft: '40px' }} // Adjust size as needed
+        style={{ alignSelf: 'center', height: '400px', margin: '20px' }} // Adjust size as needed
     />       
             <div>
-                <Select value={sortCriteria} onChange={handleSortChange} label="Sort by">
-                    <MenuItem value="CreatedAt_desc">Newest Created</MenuItem>
+              <Select value={sortCriteria} onChange={handleSortChange} label="Sort by" style={{ color: '#004d40' }}>                   <MenuItem value="CreatedAt_desc">Newest Created</MenuItem>
                     <MenuItem value="CreatedAt_asc"> Oldest Created</MenuItem>
                     <MenuItem value="UpdatedAt_desc"> Newest Updated</MenuItem>
                     <MenuItem value="UpdatedAt_asc"> Oldest Updated</MenuItem>
@@ -243,7 +249,19 @@ const SearchItem: React.FC = () => {
                     selectedCurriculumIds={selectedCurriculumIds}
                     onCheckboxChange={handleCheckboxChange}
                 />
-                <h3>Item Categories:</h3>
+                <Accordion
+                style={accordionStyle}>
+                <AccordionSummary
+                        style={accordionSummaryStyle}
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="curriculum-options-content"
+                        id="curriculum-options-header"
+                      >
+                        <BlogIcon />
+                        <h3>Item Categories:</h3>
+                      </AccordionSummary>
+                      <AccordionDetails
+                      style={accordionDetailsStyle}>
                     {itemCategoriesData !== null ? (
                         itemCategoriesData.map((category: ItemCategory) => (
                             <FormControlLabel
@@ -260,6 +278,8 @@ const SearchItem: React.FC = () => {
                     ) : (
                     <p>Loading item categories...</p> // You can add a loading indicator here
                 )}
+                </AccordionDetails>
+                </Accordion>
                 <div>
                 <TextField
                     type="text"
@@ -290,18 +310,17 @@ const SearchItem: React.FC = () => {
           <List>
                     {sortedResults.map((result) => (
                         <Accordion 
-                          expanded={expanded === `panel-${result.UniqueId}`} 
-                          onChange={handleAccordionChange(`panel-${result.UniqueId}`)}
+                        expanded={expandedAccordions[ `panel-${result.UniqueId}`]}
+                        onChange={() => handleAccordionToggle(`panel-${result.UniqueId}`)}
                           key={result.UniqueId} 
                           style={{ backgroundColor: '#ffffff', margin: '10px 0' }}
                         >
                             <AccordionSummary
                                 expandIcon={
-                                  <IconButton onClick={(e) => handleExpandClick(e, `panel-${result.UniqueId}`)}>
-                                    <ExpandMoreIcon />
+                                  <IconButton onClick={() => handleAccordionToggle(`panel-${result.UniqueId}`)}>
+                                  <ExpandMoreIcon />
                                   </IconButton>
                                 }
-                                onClick={() => window.open(`/item/${result.ItemCategoriesName}/${result.ID}`, '_blank')}
                                 aria-controls={`panel-${result.UniqueId}-content`}
                                 id={`panel-${result.UniqueId}-header`}
                             >
@@ -319,21 +338,57 @@ const SearchItem: React.FC = () => {
                             </AccordionSummary>
                             <AccordionDetails>
                             <Typography>
-                                    User ID: {result.UserFirebaseUID} <br />
-                                    Title: {result.Title} <br />
-                                    Author: {result.Author} <br />
-                                    Link: {result.Link} <br />
-                                    Likes: {result.Likes} <br />
-                                    Item Category: {result.ItemCategoriesName} <br />
-                                    Created At: {result.CreatedAt} <br />
-                                    Updated At: {result.UpdatedAt} <br />
-                                    {result.CurriculumIDs && result.CurriculumIDs.length > 0 && (
-                                        <>
-                                            Curriculum IDs: {result.CurriculumIDs.join(', ')}
-                                            <br />
-                                        </>
-                                    )}
-                                </Typography>                            </AccordionDetails>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td>User ID:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.UserFirebaseUID}</td>
+                          </tr>
+                          <tr>
+                            <td>Title:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.Title}</td>
+                          </tr>
+                          <tr>
+                            <td>Author:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.Author}</td>
+                          </tr>
+                          <tr>
+                            <td>Link:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                              <a href={result.Link} target="_blank" rel="noopener noreferrer">
+                                {result.Link}
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Item Category:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.ItemCategoriesName}</td>
+                          </tr>
+                          <tr>
+                            <td>Created At:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.CreatedAt}</td>
+                          </tr>
+                          <tr>
+                            <td>Updated At:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.UpdatedAt}</td>
+                          </tr>
+                          {result.CurriculumIDs && result.CurriculumIDs.length > 0 && (
+                            <tr>
+                              <td>Curriculum IDs:</td>
+                              <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.CurriculumIDs.join(', ')}</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </Typography>                     
+                              </AccordionDetails>
+                              <Button
+                                variant="contained"
+                                style={{ backgroundColor: '#000000', color: '#ffffff', padding: '10px', marginBottom: '20px', marginLeft: '20px' }}
+                                onClick={() => window.open(`/item/${result.ItemCategoriesName}/${result.ID}`, '_blank')}
+                                >
+                                View Item
+                            </Button>
                         </Accordion>
                     ))}
                 </List>

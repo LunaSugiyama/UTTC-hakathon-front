@@ -14,6 +14,7 @@ export interface Item {
     Images: string[];
     CreatedAt: string;
     UpdatedAt: string;
+    Similarity: number;
     // Add other properties as needed
   }
   

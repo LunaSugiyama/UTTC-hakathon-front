@@ -5,6 +5,7 @@ import { fireAuth, firebaseStorage } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import CurriculumCheckbox from '../curriculum/Checkbox';
 import SingleCheckbox from '../item_category/SingleCheckbox';
+import Layout from '../../item/layout/Layout';
 
 // MUI
 import { Button, TextField, ThemeProvider, createTheme, FormGroup, Paper, Typography, Box, CircularProgress } from '@mui/material';
@@ -195,6 +196,7 @@ const handleSubmit = async () => {
 };
 
     return (
+      <Layout>
     <ThemeProvider theme={theme}>
       <Box sx={{ width: '100%', maxWidth: 500, mx: 'auto' }}>
         <h2>Create a New Item</h2>
@@ -278,9 +280,17 @@ const handleSubmit = async () => {
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Create
           </Button>
+          <Button
+            variant="outlined"
+            style={{ color: '#66cc99', borderColor: '#66cc99', margin: '10px' }}
+            href="/item"
+          >
+            Cancel
+          </Button>
         </form>
       </Box>
     </ThemeProvider>
+    </Layout>
     );
 };
 

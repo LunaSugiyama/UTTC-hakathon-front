@@ -13,6 +13,7 @@ import VideoIcon from '@mui/icons-material/OndemandVideo';
 import Layout from '../../item/layout/Layout';
 import Tree from '../../item/tree.png';
 import getIconForCategory from '../../item/icons/GetIconForCategory';
+import { accordionStyle, accordionSummaryStyle, accordionDetailsStyle } from '../curriculum/Checkbox';
 
 // MUI
 import { Button, FormControlLabel, List, ListItem, ListItemText, Paper, ThemeProvider, createTheme, TextField, Select, MenuItem, SelectChangeEvent, Container,
@@ -232,8 +233,7 @@ const SearchItem: React.FC = () => {
         style={{ alignSelf: 'center', height: '350px', marginLeft: '40px' }} // Adjust size as needed
     />       
             <div>
-                <Select value={sortCriteria} onChange={handleSortChange} label="Sort by">
-                    <MenuItem value="CreatedAt_desc">Newest Created</MenuItem>
+              <Select value={sortCriteria} onChange={handleSortChange} label="Sort by" style={{ color: '#004d40' }}>                   <MenuItem value="CreatedAt_desc">Newest Created</MenuItem>
                     <MenuItem value="CreatedAt_asc"> Oldest Created</MenuItem>
                     <MenuItem value="UpdatedAt_desc"> Newest Updated</MenuItem>
                     <MenuItem value="UpdatedAt_asc"> Oldest Updated</MenuItem>
@@ -243,7 +243,19 @@ const SearchItem: React.FC = () => {
                     selectedCurriculumIds={selectedCurriculumIds}
                     onCheckboxChange={handleCheckboxChange}
                 />
-                <h3>Item Categories:</h3>
+                <Accordion
+                style={accordionStyle}>
+                <AccordionSummary
+                        style={accordionSummaryStyle}
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="curriculum-options-content"
+                        id="curriculum-options-header"
+                      >
+                        <BlogIcon />
+                        <h3>Item Categories:</h3>
+                      </AccordionSummary>
+                      <AccordionDetails
+                      style={accordionDetailsStyle}>
                     {itemCategoriesData !== null ? (
                         itemCategoriesData.map((category: ItemCategory) => (
                             <FormControlLabel
@@ -260,6 +272,8 @@ const SearchItem: React.FC = () => {
                     ) : (
                     <p>Loading item categories...</p> // You can add a loading indicator here
                 )}
+                </AccordionDetails>
+                </Accordion>
                 <div>
                 <TextField
                     type="text"
@@ -333,7 +347,8 @@ const SearchItem: React.FC = () => {
                                             <br />
                                         </>
                                     )}
-                                </Typography>                            </AccordionDetails>
+                                </Typography>                            
+                              </AccordionDetails>
                         </Accordion>
                     ))}
                 </List>
