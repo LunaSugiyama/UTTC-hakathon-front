@@ -115,7 +115,9 @@ const CreateItem = () => {
 
 const uploadImages = async () => {
   const user = fireAuth.currentUser;
+  console.log(user);
   const firebase_UID = user ? user.uid : null;
+  console.log(firebase_UID);
   const imageUrls = [];
 
   for (const image of formData.images) {
