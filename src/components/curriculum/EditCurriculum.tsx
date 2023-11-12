@@ -32,7 +32,7 @@ const CurriculumPage: React.FC = () => {
 
   useEffect(() => {
     const token = Cookies.get('token');
-    axios.get('http://localhost:8000/curriculums/showall', {
+    axios.get('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/showall', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
@@ -53,7 +53,7 @@ const CurriculumPage: React.FC = () => {
     if (editedName !== curriculumData.find(curriculum => curriculum.id === id)?.name) {
         const token = Cookies.get('token');
         axios.put(
-          `http://localhost:8000/curriculums/update`,
+          `https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/update`,
           {
             id,
             name: editedName,
@@ -96,7 +96,7 @@ const CurriculumPage: React.FC = () => {
         const token = Cookies.get('token');
         axios
           .post(
-            `http://localhost:8000/curriculums/create`,
+            `https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/create`,
             {
               name: newCurriculumName,
             },
@@ -123,7 +123,7 @@ const CurriculumPage: React.FC = () => {
   const handleDelete = (id: number) => {
     // Perform delete request
     const token = Cookies.get('token');
-    axios.delete(`http://localhost:8000/curriculums/delete`, {
+    axios.delete(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/delete`, {
       headers: { Authorization: `Bearer ${token}` },
       data: { id }
     })

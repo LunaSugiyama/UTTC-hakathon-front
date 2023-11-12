@@ -42,7 +42,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
         }
 
         // Make an HTTP GET request to the /checkliked endpoint
-        axios.get(`http://localhost:8000/items/checkliked`, {
+        axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/checkliked`, {
             params: {
                 item_id: item.id,
                 item_categories_id: item.item_categories_id,
@@ -61,7 +61,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
     };
 
     const likeItem = () => {
-        axios.post(`http://localhost:8000/items/like`, {
+        axios.post(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/like`, {
             item_id: item.id,
             item_categories_id: item.item_categories_id,
             user_firebase_uid: fireAuth.currentUser?.uid,
@@ -80,7 +80,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
     };
 
     const unlikeItem = () => {
-        axios.post(`http://localhost:8000/items/unlike`, {
+        axios.post(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/unlike`, {
             item_id: item.id,
             item_categories_id: item.item_categories_id,
             user_firebase_uid: fireAuth.currentUser?.uid,

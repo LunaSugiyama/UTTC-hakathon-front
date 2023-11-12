@@ -28,7 +28,7 @@ const AddBlog = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/addBlog', {
+      const response = await axios.post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/addBlog', {
         user_id: user.uid, // Use the Firebase User ID
         link: link,
       });
