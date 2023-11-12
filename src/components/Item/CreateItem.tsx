@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { fireAuth, firebaseStorage } from '../../firebase';
@@ -68,6 +68,22 @@ const CreateItem = () => {
     curriculum_ids: [],
     images: [],
   });
+
+  useEffect(() => {
+    const unsubscribe = fireAuth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in, now you can use user.uid
+        console.log(user.uid);
+      } else {
+        // User is signed out
+        console.log('User is not authenticated');
+        // Redirect to login or handle unauthenticated state
+      }
+    });
+  
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   const handleCheckboxChange = (id: number) => {
     if (formData.curriculum_ids.includes(id)) {
