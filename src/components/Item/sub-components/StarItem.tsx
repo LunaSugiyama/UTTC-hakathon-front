@@ -43,7 +43,7 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
 
     // Make an HTTP GET request to the /checkstarred endpoint
     axios
-      .get(`http://localhost:8000/items/checkstarred`, {
+      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/checkstarred`, {
         params: {
           item_id: item.id,
           item_categories_id: item.item_categories_id,
@@ -72,7 +72,7 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
     // Make an HTTP POST request to star the item with additional data in the payload
     axios
       .post(
-        'http://localhost:8000/items/star',
+        'https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/star',
         {
           item_id: item.id,
           item_categories_id: item.item_categories_id,
@@ -106,7 +106,7 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
     // Make an HTTP POST request to unstar the item
     axios
       .post(
-        'http://localhost:8000/items/unstar',
+        'https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/unstar',
         {
           item_id: item.id,
           item_categories_id: item.item_categories_id,

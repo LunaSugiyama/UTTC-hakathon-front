@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { Typography } from '@mui/material';
 
@@ -15,7 +16,7 @@ const LikeCount: React.FC<LikeCountProps> = ({ itemID, itemCategoriesID, isItemL
 
   useEffect(() => {
     // Make an API request to get the like count for the specified item
-    axios.get(`http://localhost:8000/items/countlikes?item_id=${itemID}&item_categories_id=${itemCategoriesID}`, {
+    axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/countlikes?item_id=${itemID}&item_categories_id=${itemCategoriesID}`, {
         headers: { Authorization: `Bearer ${Cookies.get('token')}` },
     })
       .then((response) => {
@@ -31,7 +32,10 @@ const LikeCount: React.FC<LikeCountProps> = ({ itemID, itemCategoriesID, isItemL
       {likeCount === null ? (
         <Typography>Loading like count...</Typography>
       ) : (
-        <Typography>Likes: {likeCount}</Typography>
+        <Typography>
+          <FavoriteIcon sx={{ color: '#004d40' }} />
+           {likeCount}
+          </Typography>
       )}
     </div>
   );

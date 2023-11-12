@@ -85,7 +85,7 @@ const UserPage: React.FC = () => {
   
     console.log('firebase', user_firebase_uid);
   
-    axios.get(`http://localhost:8000/users/show?user_firebase_uid=${user_firebase_uid}`, {
+    axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/show?user_firebase_uid=${user_firebase_uid}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then(response => {
@@ -153,7 +153,7 @@ const UserPage: React.FC = () => {
   const handleUpdateProfile = () => {
     // Send a PUT request to update the user's profile
     axios
-    .put('http://localhost:8000/users/update', {
+    .put('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/update', {
       firebase_uid: fireAuth.currentUser?.uid,
       name: editedUser.name,
       email: editedUser.email,
