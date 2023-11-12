@@ -117,6 +117,7 @@ const uploadImages = async () => {
   const user = fireAuth.currentUser;
   console.log(user);
   const firebase_UID = user ? user.uid : null;
+  console.log(firebase_UID);
   const imageUrls = [];
 
   for (const image of formData.images) {
@@ -175,7 +176,7 @@ const handleSubmit = async () => {
         ...formData,
         curriculum_ids: formData.curriculum_ids,
         item_categories_id: formData.item_categories_id,
-        user_firebase_uid: firebase_UID,
+        user_id: firebase_UID,
         images: imageUrls, // Pass the array of image URLs
       };
 
