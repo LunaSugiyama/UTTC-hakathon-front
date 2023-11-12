@@ -10,9 +10,17 @@ import { Comment } from '../../interfaces/Comment';
 import CommentInput from './sub-components/CommentInput';
 import CommentList from './sub-components/CommentList';
 import Layout from '../../item/layout/Layout';
+import fetchRelatedItems from './utils/fetchRelatedItems';
+import { Item } from '../../interfaces/Item';
+import getIconForCategory from '../../item/icons/GetIconForCategory';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // MUI
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Container,
   Paper,
   Typography,
@@ -25,11 +33,13 @@ import {
   CardContent,
   CardMedia,
   Link as MuiLink,
+  List
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { get } from 'http';
 
 // Create a green theme
 const theme = createTheme({
@@ -83,6 +93,7 @@ const ItemDetails: React.FC = () => {
   const [loadLikeButton, setLoadLikeButton] = useState(false);
   const [likeCount, setLikeCount] = useState<number | null>(null);
   const [comments, setComments] = useState<Comment[]>([]); 
+  const [relatedItems, setRelatedItems] = useState<Item[]>([]);
 
   // come back to the same home page
   const location = useLocation();
@@ -118,8 +129,21 @@ const ItemDetails: React.FC = () => {
       fetchLikeCount(item.id, item.item_categories_id);
     }
   };
-  
-  
+
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const handleAccordionChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+  };
+
+  const [expandedAccordions, setExpandedAccordions] = useState<{ [key: string]: boolean }>({});
+
+  // Function to toggle accordion expansion
+  const handleAccordionToggle = (id: string) => (event: React.SyntheticEvent) =>{
+    setExpandedAccordions(prevState => ({
+      ...prevState,
+      [id]: !prevState[id]
+    }));
+  };
 
   const fetchLikeCount = (itemId: number, itemCategoriesId: number) => {
     // Make an API request to get the like count for the specified item
@@ -137,13 +161,126 @@ const ItemDetails: React.FC = () => {
 
   const fetchComments = (itemId: number, itemCategoriesId: number) => {
     axios
-      .get(`http://localhost:8000/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`)
+      .get(`http://localhost:8000/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        })
       .then((response) => {
         setComments(response.data.comments);
       })
       .catch((error) => {
         console.error('Error fetching comments:', error);
       });
+  };
+
+  useEffect(() => {
+    if (item) {
+      fetchLikeCount(item.id, item.item_categories_id);
+      fetchComments(item.id, item.item_categories_id);
+      fetchRelatedItems(item.id, item.item_categories_name, setRelatedItems);
+    }
+  }, [item]);
+
+  const getTopRelatedItems = () => {
+    console.log('relatedItems', relatedItems);
+    // Check if relatedItems is not undefined and has items
+    if (relatedItems && relatedItems.length > 0) {
+      return (
+        <List>
+          {
+        relatedItems
+        .sort((a, b) => b.Similarity - a.Similarity)
+        .slice(1, 6)
+        .map((relatedItem) => (
+          <Grid item xs={12} key={relatedItem.UniqueId}>
+          <Accordion 
+          expanded={expandedAccordions[ `panel-${relatedItem.UniqueId}`]}
+          onChange={() => handleAccordionToggle(`panel-${relatedItem.UniqueId}`)}
+          key={relatedItem.UniqueId}
+          style={{ backgroundColor: '#ffffff', margin: '10px 0', width: '100%' }}
+        >
+              <AccordionSummary
+                  expandIcon={
+                    <IconButton onClick={() => handleAccordionToggle(`panel-${relatedItem.UniqueId}`)}>
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  }
+                  aria-controls={`panel-${relatedItem.UniqueId}-content`}
+                  id={`panel-${relatedItem.UniqueId}-header`}
+                  style={{ width: '100%' }}
+              >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          {getIconForCategory(relatedItem.ItemCategoriesName.toLowerCase())}
+                          <Typography sx={{ ml: 1 }}>{relatedItem.Title}</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography sx={{ mr: 1 }}>{relatedItem.UpdatedAt}</Typography>
+                          <FavoriteIcon />
+                          <Typography sx={{ ml: 1 }}>{relatedItem.Likes}</Typography>
+                      </Box>
+                  </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+              <Typography>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td>User ID:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.UserFirebaseUID}</td>
+                          </tr>
+                          <tr>
+                            <td>Title:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.Title}</td>
+                          </tr>
+                          <tr>
+                            <td>Author:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.Author}</td>
+                          </tr>
+                          <tr>
+                            <td>Link:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>
+                              <a href={relatedItem.Link} target="_blank" rel="noopener noreferrer">
+                                {relatedItem.Link}
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Item Category:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.ItemCategoriesName}</td>
+                          </tr>
+                          <tr>
+                            <td>Created At:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.CreatedAt}</td>
+                          </tr>
+                          <tr>
+                            <td>Updated At:</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.UpdatedAt}</td>
+                          </tr>
+                          {relatedItem.CurriculumIDs && relatedItem.CurriculumIDs.length > 0 && (
+                            <tr>
+                              <td>Curriculum IDs:</td>
+                              <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.CurriculumIDs.join(', ')}</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </Typography>
+                  </AccordionDetails>
+                  <Button
+                                variant="contained"
+                                style={{ backgroundColor: '#000000', color: '#ffffff', padding: '10px', marginBottom: '20px', marginLeft: '20px' }}
+                                onClick={() => window.open(`/item/${relatedItem.ItemCategoriesName}/${relatedItem.ID}`, '_blank')}
+                                >
+                                View Item
+                            </Button>
+          </Accordion>
+          </Grid>
+        ))}
+        </List>
+      );
+    } else {
+      return <Typography variant="body1">No related items found.</Typography>;
+    }
   };
 
   useEffect(() => {
@@ -195,16 +332,16 @@ const ItemDetails: React.FC = () => {
   return (
     <Layout>
     <ThemeProvider theme={theme}>
-    <Container component="main" maxWidth="md">
-      <Paper elevation={3} sx={{ my: 8, mx: 4, p: 3 , backgroundColor: '#f5f5f5'}}>
+    <Container component="main" maxWidth="md" style={{ backgroundColor: '#a5d6a7' }} sx={{ py: 1 }}> {/* Light green background */}
+      <Paper elevation={3} sx={{ my: 8, mx: 4, p: 3 , backgroundColor: '#e8f5e9'}}>
         {item ? (
           <>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <IconButton onClick={() => navigate(backToHomeLink)} aria-label="back">
                 <ArrowBackIcon />
               </IconButton>
-              <Typography component="h1" variant="h5" align="center">
-                Item Details
+              <Typography component="h1" variant="h4" align="center">
+                {item.title}
               </Typography>
               <IconButton onClick={handleDeleteItem} aria-label="delete">
                 <DeleteIcon />
@@ -232,48 +369,85 @@ const ItemDetails: React.FC = () => {
               </Grid>
             ))}
       {/* Text Content */}
-      <Grid item xs={12}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="h5" gutterBottom>
-              {item.title}
-            </Typography>
-            <Typography variant="subtitle1">
-              Author: {item.author}
-            </Typography>
-            <Typography variant="subtitle1">
-              {item.item_categories_name} ID: {item.id}
-            </Typography>
-            <Typography variant="subtitle1">
-              User ID: {item.user_id}
-            </Typography>
-            <Typography variant="subtitle1">
-              Link: <a href={item.link} target="_blank" rel="noopener noreferrer">{item.link}</a>
-            </Typography>
-            <LikeCount itemID={item.id} itemCategoriesID={item.item_categories_id} isItemLiked={isItemLiked}/>
-            <Typography variant="subtitle1">
-              Item Category: {item.item_categories_name}
-            </Typography>
-            <Typography variant="subtitle1">
-              Curriculum: {loadingCurriculumNames ? <CircularProgress size={20} /> : curriculumNames.join(', ')}
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Explanation: {item.explanation}
-            </Typography>
+<Grid item xs={12} style={{ backgroundColor: '#e8f5e9' }}>
+  <Card variant="outlined">
+    <CardContent>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Author:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            {item.author}
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Category Name:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            {item.item_categories_name}
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Link:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            {item.link}
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography>
+          added User ID
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography>
+          {item.user_id}
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Explanation:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            {item.explanation}
+          </Typography>
+        </Grid>
+          <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Curriculum:
+          </Typography>
+          </Grid>
+          <Grid item xs={6}>
+          <Typography variant="subtitle1">
+          {loadingCurriculumNames ? <CircularProgress size={20} /> : curriculumNames.join(', ')}
+          </Typography>
+          </Grid>
+        </Grid>
           </CardContent>
         </Card>
       </Grid>
-    </Grid>
+      </Grid>
             <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
               <MuiLink component={Link} to={`/item/${item ? item.item_categories_name : 'loading'}/${item ? item.id : 'loading'}/edit`}>
-                <Button startIcon={<EditIcon />} variant="outlined">
+                <Button startIcon={<EditIcon />} variant="contained" color="primary">
                   Edit Item
                 </Button>
               </MuiLink>
 
               {loadStarButton && 
               <StarButton
-                item={{ id: item.id, isStarred: isItemStarred, item_categories_id: item.item_categories_id }}
+              item={{ id: item.id, isStarred: isItemStarred, item_categories_id: item.item_categories_id }}
                 onStar={(starredItem) => {
                   // Handle the star action (you can perform an API request to update the star status)
                 }}
@@ -291,11 +465,16 @@ const ItemDetails: React.FC = () => {
               onCommentSubmit={() => fetchComments(item.id, item.item_categories_id)}
             />
             <CommentList item_id={item.id} item_categories_id={item.item_categories_id} comments={comments} />
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Related Items
+              </Typography>
+                {getTopRelatedItems()}
+
+          </Box>
           </>
         ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress />
-          </Box>
+          <CircularProgress />
         )}
       </Paper>
     </Container>

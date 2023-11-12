@@ -20,6 +20,35 @@ const theme = createTheme({
       main: '#388e3c', // You can adjust this
     },
   },
+  typography: {
+    // You can adjust these values as needed
+    h5: {
+      fontSize: '1.5rem', // Larger heading
+    },
+    body2: {
+      fontSize: '1.1rem', // Larger body text
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          padding: '10px 15px', // Larger padding for buttons
+          fontSize: '1.1rem', // Larger font size for buttons
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiInputBase-root': {
+            fontSize: '1.1rem', // Larger font size for text fields
+          },
+        },
+      },
+    },
+    // ...other component overrides if needed
+  },
 });
 
 const LoginAndRegister: React.FC = () => {
@@ -89,24 +118,17 @@ const LoginAndRegister: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-        }}
+        sx={{...rootStyle}}
       >
         {/* Login Form */}
-        <Paper
-          sx={{
-            padding: 3,
+        <Paper sx={{
+            padding: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: 2, // Spacing between elements
-          }}
-        >
+            // Additional styling if needed
+          }}>
           <Typography variant="h5" color="primary">
             Login
           </Typography>
@@ -131,6 +153,7 @@ const LoginAndRegister: React.FC = () => {
             color="primary"
             onClick={handleLogin}
             fullWidth
+            sx={{ padding: '10px', fontSize: '1.1rem' }} // Larger button
           >
             Login
           </Button>

@@ -4,14 +4,14 @@ import Home from '../components/Home';
 import ItemDetails from '../components/Item/ItemDetails';
 import CreateItem from '../components/Item/CreateItem';
 import LoginComponent from '../components/user/LoginComponent';
-import SignupComponent from '../components/user/SignupComponent';
 import UserPage from '../components/user/UserPage';
 import Header from '../components/Header';
 import EditItem from '../components/Item/EditItem';
-import SignupForm from '../SignupForm';
+import SignupForm from '../components/user/SignupForm';
 import GoogleLoginForm from '../GoogleLoginForm';
 import SearchItem from '../components/Item/SearchItem';
 import LoginAndRegister from '../components/LoginAndRegister';
+import CurriculumPage from '../components/curriculum/EditCurriculum';
 
 const RoutesConfig: React.FC = () => (
   <Router>
@@ -19,10 +19,10 @@ const RoutesConfig: React.FC = () => (
       <Routes>
         <Route path="/" element={<LoginAndRegister />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/curriculums/edit" element={<CurriculumPage />} />
         <Route path="/item" element={<SearchItem />} />
         <Route path="/item/:category/:id" element={<ItemDetails />} />
         <Route path="/item/:item_categories_name/:item_id/edit" element={<EditItem />} />
-        <Route path="/signup" element={<SignupComponent />} />
         <Route path="/login" element={<LoginComponent />} />
         <Route path="/google-login" element={<GoogleLoginForm />} />
         <Route path="/user" element={<UserPage />} />
