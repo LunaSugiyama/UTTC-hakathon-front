@@ -172,6 +172,22 @@ const UserPage: React.FC = () => {
       console.error('Error updating user profile:', error);
     });
   }
+  interface FirebaseError {
+    code: string;
+    message: string;
+  }
+
+  const handleFirebaseError = (error: FirebaseError) => {
+    console.error('Error updating user profile:', error);
+    if (error.code === "auth/requires-recent-login") {
+      // Handle the specific CREDENTIAL_TOO_OLD_LOGIN_AGAIN error
+      // You can set a state to show an error message or redirect to a login screen
+      setApiError('Your session is too old. Please log in again.');
+      // You might want to redirect to the login page or show a re-login prompt
+    } else {
+      setApiError(error.message || 'An unexpected error occurred.');
+    }
+  };
 
   const handleUpdateEmailPassword = () => {
     // Update Firebase email and password using Firebase Authentication methods
@@ -194,6 +210,7 @@ const UserPage: React.FC = () => {
         } else {
           setApiError('An unexpected error occurred.');
         }
+        handleFirebaseError(error); // Call a function to handle the error
       });
   
     // Update Password
@@ -206,6 +223,7 @@ const UserPage: React.FC = () => {
         } else {
           setApiError('An unexpected error occurred.');
         }
+        handleFirebaseError(error); // Call a function to handle the error
       });
   };
   
