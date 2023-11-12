@@ -23,6 +23,7 @@ const LoginComponent: React.FC = () => {
         const uid = user.uid;
         const idToken = await user.getIdToken();
         Cookies.set('token', idToken, { expires: 1 / 24 }); // Set cookie to expire in 1 hour
+        Cookies.set('uid', uid, { expires: 1 / 24 }); // Expires in 1 hour
 
         axios 
           .post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/login', {uid, idToken}, { 

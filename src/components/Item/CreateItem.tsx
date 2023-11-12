@@ -131,9 +131,9 @@ const CreateItem = () => {
 
 const uploadImages = async () => {
   const user = fireAuth.currentUser;
-  console.log(user);
+  console.log('user:', user);
   const firebase_UID = user ? user.uid : null;
-  console.log(firebase_UID);
+  console.log('firebase_uid',firebase_UID);
   const imageUrls = [];
 
   for (const image of formData.images) {
@@ -187,6 +187,9 @@ const handleSubmit = async () => {
     } else {
       setErrorMessage(''); // Clear any previous error message
       const token = Cookies.get('token');
+      const uid = Cookies.get('uid');
+      console.log('token:', token);
+      console.log('uid:', uid);
 
       const dataToSend = {
         ...formData,
