@@ -108,7 +108,7 @@ const ItemDetails: React.FC = () => {
   const handleDeleteItem = () => {
     if (item) {
       axios
-        .delete(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${category}/delete`, {
+        .delete(`https://uttc-hakathon-front.vercel.app/${category}/delete`, {
           data: { id: item.id }, // Send the ID as raw JSON in the request body
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -148,7 +148,7 @@ const ItemDetails: React.FC = () => {
   const fetchLikeCount = (itemId: number, itemCategoriesId: number) => {
     // Make an API request to get the like count for the specified item
     axios
-      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/countlikes?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
+      .get(`https://uttc-hakathon-front.vercel.app/items/countlikes?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -161,7 +161,7 @@ const ItemDetails: React.FC = () => {
 
   const fetchComments = (itemId: number, itemCategoriesId: number) => {
     axios
-      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
+      .get(`https://uttc-hakathon-front.vercel.app/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
         headers: { Authorization: `Bearer ${token}` },
         })
       .then((response) => {
@@ -188,7 +188,7 @@ const ItemDetails: React.FC = () => {
         <List>
           {
         relatedItems
-        .sort((a, b) => b.Similarity - a.Similarity)
+        .sort((a, b) => b.similarity - a.similarity)
         .slice(1, 6)
         .map((relatedItem) => (
           <Grid item xs={12} key={relatedItem.UniqueId}>
@@ -210,13 +210,13 @@ const ItemDetails: React.FC = () => {
               >
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          {getIconForCategory(relatedItem.ItemCategoriesName.toLowerCase())}
-                          <Typography sx={{ ml: 1 }}>{relatedItem.Title}</Typography>
+                          {getIconForCategory(relatedItem.item_categories_name.toLowerCase())}
+                          <Typography sx={{ ml: 1 }}>{relatedItem.title}</Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Typography sx={{ mr: 1 }}>{relatedItem.UpdatedAt}</Typography>
+                          <Typography sx={{ mr: 1 }}>{relatedItem.updated_at}</Typography>
                           <FavoriteIcon />
-                          <Typography sx={{ ml: 1 }}>{relatedItem.Likes}</Typography>
+                          <Typography sx={{ ml: 1 }}>{relatedItem.likes}</Typography>
                       </Box>
                   </Box>
               </AccordionSummary>
@@ -226,40 +226,40 @@ const ItemDetails: React.FC = () => {
                         <tbody>
                           <tr>
                             <td>User ID:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.UserFirebaseUID}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.user_firebase_uid}</td>
                           </tr>
                           <tr>
                             <td>Title:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.Title}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.title}</td>
                           </tr>
                           <tr>
                             <td>Author:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.Author}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.author}</td>
                           </tr>
                           <tr>
                             <td>Link:</td>
                             <td style={{ textAlign: 'left', paddingLeft: '20px' }}>
-                              <a href={relatedItem.Link} target="_blank" rel="noopener noreferrer">
-                                {relatedItem.Link}
+                              <a href={relatedItem.link} target="_blank" rel="noopener noreferrer">
+                                {relatedItem.link}
                               </a>
                             </td>
                           </tr>
                           <tr>
                             <td>Item Category:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.ItemCategoriesName}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.item_categories_name}</td>
                           </tr>
                           <tr>
                             <td>Created At:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.CreatedAt}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.created_at}</td>
                           </tr>
                           <tr>
                             <td>Updated At:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.UpdatedAt}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.updated_at}</td>
                           </tr>
-                          {relatedItem.CurriculumIDs && relatedItem.CurriculumIDs.length > 0 && (
+                          {relatedItem.curriculum_ids && relatedItem.curriculum_ids.length > 0 && (
                             <tr>
                               <td>Curriculum IDs:</td>
-                              <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.CurriculumIDs.join(', ')}</td>
+                              <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{relatedItem.curriculum_ids.join(', ')}</td>
                             </tr>
                           )}
                         </tbody>
@@ -269,7 +269,7 @@ const ItemDetails: React.FC = () => {
                   <Button
                                 variant="contained"
                                 style={{ backgroundColor: '#000000', color: '#ffffff', padding: '10px', marginBottom: '20px', marginLeft: '20px' }}
-                                onClick={() => window.open(`/item/${relatedItem.ItemCategoriesName}/${relatedItem.ID}`, '_blank')}
+                                onClick={() => window.open(`/item/${relatedItem.item_categories_name}/${relatedItem.id}`, '_blank')}
                                 >
                                 View Item
                             </Button>
@@ -289,7 +289,7 @@ const ItemDetails: React.FC = () => {
 
       // Fetch item details based on the ID from the URL
       axios
-        .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${category}/get?id=${itemId}`, {
+        .get(`https://uttc-hakathon-front.vercel.app/${category}/get?id=${itemId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -310,7 +310,7 @@ const ItemDetails: React.FC = () => {
       // Map through curriculum_ids and fetch curriculum names for each ID
       Promise.all(
         item.curriculum_ids.map((curriculumId) =>
-          axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/get?id=${curriculumId}`, {
+          axios.get(`https://uttc-hakathon-front.vercel.app/curriculums/get?id=${curriculumId}`, {
             headers: { Authorization: `Bearer ${token}` },
           })
         )
@@ -410,7 +410,7 @@ const ItemDetails: React.FC = () => {
         </Grid>
         <Grid item xs={6}>
           <Typography>
-          {item.user_id}
+          {item.user_firebase_uid}
           </Typography>
         </Grid>
         <Grid item xs={6}>

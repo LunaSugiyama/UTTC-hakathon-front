@@ -31,9 +31,9 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
 
 
   const checkIfItemIsStarred = () => {
-    const user_id = fireAuth.currentUser?.uid;
+    const user_firebase_uid = fireAuth.currentUser?.uid;
 
-  if (!user_id) {
+  if (!user_firebase_uid) {
     // Wait and try again after a short delay
     setTimeout(() => {
       checkIfItemIsStarred();
@@ -43,11 +43,11 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
 
     // Make an HTTP GET request to the /checkstarred endpoint
     axios
-      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/checkstarred`, {
+      .get(`https://uttc-hakathon-front.vercel.app/items/checkstarred`, {
         params: {
           item_id: item.id,
           item_categories_id: item.item_categories_id,
-          user_firebase_uid: user_id,
+          user_firebase_uid: user_firebase_uid,
         },
         headers: { Authorization: `Bearer ${Cookies.get('token')}` },
       })
@@ -62,9 +62,9 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
   };
 
   const starItem = () => {
-    const user_id = fireAuth.currentUser?.uid;
+    const user_firebase_uid = fireAuth.currentUser?.uid;
 
-    if (!user_id) {
+    if (!user_firebase_uid) {
       console.error('Error starring the item: User ID is not available');
       return;
     }
@@ -72,11 +72,11 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
     // Make an HTTP POST request to star the item with additional data in the payload
     axios
       .post(
-        'https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/star',
+        'https://uttc-hakathon-front.vercel.app/items/star',
         {
           item_id: item.id,
           item_categories_id: item.item_categories_id,
-          user_firebase_uid: user_id, // Add the user_id to the payload
+          user_firebase_uid: user_firebase_uid, // Add the user_firebase_uid to the payload
         },
         {
           headers: { Authorization: `Bearer ${Cookies.get('token')}` },
@@ -96,9 +96,9 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
   };
   
   const unstarItem = () => {
-    const user_id = fireAuth.currentUser?.uid;
+    const user_firebase_uid = fireAuth.currentUser?.uid;
 
-    if (!user_id) {
+    if (!user_firebase_uid) {
       console.error('Error unstarring the item: User ID is not available');
       return;
     }
@@ -106,11 +106,11 @@ const StarButton: React.FC<StarButtonProps> = ({ item, onStar }) => {
     // Make an HTTP POST request to unstar the item
     axios
       .post(
-        'https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/unstar',
+        'https://uttc-hakathon-front.vercel.app/items/unstar',
         {
           item_id: item.id,
           item_categories_id: item.item_categories_id,
-          user_firebase_uid: user_id,
+          user_firebase_uid: user_firebase_uid,
         },
         {
           headers: { Authorization: `Bearer ${Cookies.get('token')}` },

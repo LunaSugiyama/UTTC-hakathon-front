@@ -45,7 +45,7 @@ const SearchItem: React.FC = () => {
     const [searchResults, setSearchResults] = useState<Item[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [sortedResults, setSortedResults] = useState<Item[]>([]);
-    const [sortCriteria, setSortCriteria] = useState('UpdatedAt_desc'); // Default sort criteria
+    const [sortCriteria, setSortCriteria] = useState('updated_at.desc'); // Default sort criteria
     const [selectedCurriculumIds, setSelectedCurriculumIds] = useState<number[]>([]);
     const [curriculumData, setCurriculumData] = useState<Curriculum[]>([]);
     const [ItemCategoriesIds, setItemCategoriesIds] = useState<number[]>([]);
@@ -61,7 +61,7 @@ const SearchItem: React.FC = () => {
     useEffect(() => {
         const fetchCurriculumData = async () => {
             try {
-                const response = await axios.get('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/showall', {
+                const response = await axios.get('https://uttc-hakathon-front.vercel.app/curriculums/showall', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCurriculumData(response.data);
@@ -77,7 +77,7 @@ const SearchItem: React.FC = () => {
         setSearchResults([]); // Clear search results when the search query changes
         const fetchData = async () => {
           try {
-            const response = await axios.post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/search', {
+            const response = await axios.post('https://uttc-hakathon-front.vercel.app/items/search', {
               words: searchQuery,
               curriculum_ids: selectedCurriculumIds.join(','),
             });
@@ -100,7 +100,7 @@ const SearchItem: React.FC = () => {
     useEffect(() => {
         const fetchItemCategories = () => {
             axios
-              .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/item_categories/showall`, {
+              .get(`https://uttc-hakathon-front.vercel.app/item_categories/showall`, {
                 headers: { Authorization: `Bearer ${token}` }
               })
               .then((response) => {
@@ -114,7 +114,7 @@ const SearchItem: React.FC = () => {
             fetchItemCategories();
     }, []);
 
-    type ValidSortKeys = 'Likes' | 'CreatedAt' | 'UpdatedAt';
+    type ValidSortKeys = 'likes' | 'created_at' | 'updated_at';
     const applyFilterAndSort = () => {
         console.log('sortcriteria', sortCriteria, 'selectedcurriculumids', selectedCurriculumIds, 'itemcategoriesids', ItemCategoriesIds)
         let filteredResults = searchResults;
@@ -122,23 +122,23 @@ const SearchItem: React.FC = () => {
         // Filter by selected curriculum IDs if any are selected
         if (selectedCurriculumIds && selectedCurriculumIds.length > 0) {
           filteredResults = filteredResults.filter(item =>
-            selectedCurriculumIds.some(id => item.CurriculumIDs?.includes(id))
+            selectedCurriculumIds.some(id => item.curriculum_ids?.includes(id))
           );
         }
 
         // Then, if there are selected item category IDs, filter by them as well
         if (ItemCategoriesIds.length > 0) {
             filteredResults = filteredResults.filter(item =>
-            ItemCategoriesIds.includes(item.ItemCategoriesID) // Assuming each item has a CategoryID property
+            ItemCategoriesIds.includes(item.item_categories_id) // Assuming each item has a CategoryID property
             );
         }
 
-        const [criteria, order] = sortCriteria.split("_") as [ValidSortKeys, "asc" | "desc"];
+        const [criteria, order] = sortCriteria.split(".") as [ValidSortKeys, "asc" | "desc"];
         console.log('criteria', criteria, 'order', order)
         const sortOrder = order === "desc" ? -1 : 1;
     
         // Check if the criteria is a valid sort key
-        if (!['Likes', 'CreatedAt', 'UpdatedAt'].includes(criteria)) {
+        if (!['likes', 'created_at', 'updated_at'].includes(criteria)) {
             console.error(`Invalid sort criteria: ${criteria}`);
             return;
         }
@@ -158,7 +158,7 @@ const SearchItem: React.FC = () => {
         setSortedResults(sorted);
     };
 
-    const resetFiltersAndSort = (sort_criteria: keyof Item = 'CreatedAt', sort_order: 'asc' | 'desc' = 'desc') => {
+    const resetFiltersAndSort = (sort_criteria: keyof Item = 'created_at', sort_order: 'asc' | 'desc' = 'desc') => {
         setSearchQuery(''); // Clears the search query
         setSortedResults([]); // Clears the sorted results
         setSelectedCurriculumIds([]); // Clears selected curriculum IDs
@@ -240,10 +240,10 @@ const SearchItem: React.FC = () => {
     />       
             <div>
               <Select value={sortCriteria} onChange={handleSortChange} label="Sort by" style={{ color: '#004d40' }}>                   <MenuItem value="CreatedAt_desc">Newest Created</MenuItem>
-                    <MenuItem value="CreatedAt_asc"> Oldest Created</MenuItem>
-                    <MenuItem value="UpdatedAt_desc"> Newest Updated</MenuItem>
-                    <MenuItem value="UpdatedAt_asc"> Oldest Updated</MenuItem>
-                    <MenuItem value="Likes_desc">Likes</MenuItem>
+                    <MenuItem value="created_at.asc"> Oldest Created</MenuItem>
+                    <MenuItem value="updated_at.desc"> Newest Updated</MenuItem>
+                    <MenuItem value="updated_at.asc"> Oldest Updated</MenuItem>
+                    <MenuItem value="likes.desc">Likes</MenuItem>
                 </Select>
                 <CurriculumCheckbox
                     selectedCurriculumIds={selectedCurriculumIds}
@@ -326,13 +326,13 @@ const SearchItem: React.FC = () => {
                             >
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                        {getIconForCategory(result.ItemCategoriesName.toLowerCase())}
-                                        <Typography sx={{ ml: 1 }}>{result.Title}</Typography>
+                                      {typeof result.item_categories_name === 'string' ? getIconForCategory(result.item_categories_name.toLowerCase()) : null}
+                                      <Typography sx={{ ml: 1 }}>{result.title}</Typography>
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Typography sx={{ mr: 1 }}>{result.UpdatedAt}</Typography>
+                                        <Typography sx={{ mr: 1 }}>{result.updated_at}</Typography>
                                         <FavoriteIcon />
-                                        <Typography sx={{ ml: 1 }}>{result.Likes}</Typography>
+                                        <Typography sx={{ ml: 1 }}>{result.likes}</Typography>
                                     </Box>
                                 </Box>
                             </AccordionSummary>
@@ -342,40 +342,40 @@ const SearchItem: React.FC = () => {
                         <tbody>
                           <tr>
                             <td>User ID:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.UserFirebaseUID}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.user_firebase_uid}</td>
                           </tr>
                           <tr>
                             <td>Title:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.Title}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.title}</td>
                           </tr>
                           <tr>
                             <td>Author:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.Author}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.author}</td>
                           </tr>
                           <tr>
                             <td>Link:</td>
                             <td style={{ textAlign: 'left', paddingLeft: '20px' }}>
-                              <a href={result.Link} target="_blank" rel="noopener noreferrer">
-                                {result.Link}
+                              <a href={result.link} target="_blank" rel="noopener noreferrer">
+                                {result.link}
                               </a>
                             </td>
                           </tr>
                           <tr>
                             <td>Item Category:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.ItemCategoriesName}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.item_categories_name}</td>
                           </tr>
                           <tr>
                             <td>Created At:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.CreatedAt}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.created_at}</td>
                           </tr>
                           <tr>
                             <td>Updated At:</td>
-                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.UpdatedAt}</td>
+                            <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.updated_at}</td>
                           </tr>
-                          {result.CurriculumIDs && result.CurriculumIDs.length > 0 && (
+                          {result.curriculum_ids && result.curriculum_ids.length > 0 && (
                             <tr>
                               <td>Curriculum IDs:</td>
-                              <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.CurriculumIDs.join(', ')}</td>
+                              <td style={{ textAlign: 'left', paddingLeft: '20px' }}>{result.curriculum_ids.join(', ')}</td>
                             </tr>
                           )}
                         </tbody>
@@ -385,7 +385,7 @@ const SearchItem: React.FC = () => {
                               <Button
                                 variant="contained"
                                 style={{ backgroundColor: '#000000', color: '#ffffff', padding: '10px', marginBottom: '20px', marginLeft: '20px' }}
-                                onClick={() => window.open(`/item/${result.ItemCategoriesName}/${result.ID}`, '_blank')}
+                                onClick={() => window.open(`/item/${result.item_categories_name}/${result.id}`, '_blank')}
                                 >
                                 View Item
                             </Button>

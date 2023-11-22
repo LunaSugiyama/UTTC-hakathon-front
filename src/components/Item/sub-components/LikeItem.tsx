@@ -31,9 +31,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
     };
 
     const checkIfItemIsLiked = () => {
-        const user_id = fireAuth.currentUser?.uid;
+        const user_firebase_uid = fireAuth.currentUser?.uid;
 
-        if (!user_id) {
+        if (!user_firebase_uid) {
             // Wait and try again after a short delay
             setTimeout(() => {
                 checkIfItemIsLiked();
@@ -42,11 +42,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
         }
 
         // Make an HTTP GET request to the /checkliked endpoint
-        axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/checkliked`, {
+        axios.get(`https://uttc-hakathon-front.vercel.app/items/checkliked`, {
             params: {
                 item_id: item.id,
                 item_categories_id: item.item_categories_id,
-                user_firebase_uid: user_id,
+                user_firebase_uid: user_firebase_uid,
             },
             headers: { Authorization: `Bearer ${Cookies.get("token")}` },
         })
@@ -61,7 +61,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
     };
 
     const likeItem = () => {
-        axios.post(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/like`, {
+        axios.post(`https://uttc-hakathon-front.vercel.app/items/like`, {
             item_id: item.id,
             item_categories_id: item.item_categories_id,
             user_firebase_uid: fireAuth.currentUser?.uid,
@@ -80,7 +80,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ item, onLike }) => {
     };
 
     const unlikeItem = () => {
-        axios.post(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/unlike`, {
+        axios.post(`https://uttc-hakathon-front.vercel.app/items/unlike`, {
             item_id: item.id,
             item_categories_id: item.item_categories_id,
             user_firebase_uid: fireAuth.currentUser?.uid,

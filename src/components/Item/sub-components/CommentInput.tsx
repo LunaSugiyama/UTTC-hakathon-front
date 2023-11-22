@@ -28,7 +28,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ item, onCommentSubmit }) =>
       // Send the comment to the server (you can use Axios or any other HTTP library)
       // You need to pass the `item.item_id` and `item.item_categories_id` when sending the comment.
       axios
-        .post(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/comments/create`, {
+        .post(`https://uttc-hakathon-front.vercel.app/items/comments/create`, {
           item_id: item.item_id,
           item_categories_id: item.item_categories_id,
           comment: comment, // This should be the user's input

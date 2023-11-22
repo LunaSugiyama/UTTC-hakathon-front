@@ -49,7 +49,7 @@ const EditItem = () => {
     const itemId = item_id;
 
     axios
-      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${item_categories_name}/get?id=${itemId}`, {
+      .get(`https://uttc-hakathon-front.vercel.app/${item_categories_name}/get?id=${itemId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -81,11 +81,11 @@ const EditItem = () => {
           item_categories_id: formData.item_categories_id,
           explanation: formData.explanation,
           curriculum_ids: formData.curriculum_ids,
-          user_id: fireAuth.currentUser.uid,
+          user_firebase_uid: fireAuth.currentUser.uid,
         };
 
         axios
-          .put(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${item_categories_name}/update`, updatedItem, {
+          .put(`https://uttc-hakathon-front.vercel.app/${item_categories_name}/update`, updatedItem, {
             headers: { Authorization: `Bearer ${token}` },
           })
           .then((response) => {

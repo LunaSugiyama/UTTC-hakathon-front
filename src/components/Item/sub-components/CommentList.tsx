@@ -22,7 +22,7 @@ const CommentList: React.FC<CommentListProps> = ({ item_id, item_categories_id, 
   useEffect(() => {
     // Fetch comments based on item_id and item_categories_id
     axios
-      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/comments/get?item_id=${item_id}&item_categories_id=${item_categories_id}`)
+      .get(`https://uttc-hakathon-front.vercel.app/items/comments/get?item_id=${item_id}&item_categories_id=${item_categories_id}`)
       .then((response) => {
         // Check if the response data contains the 'comments' property
         if (Array.isArray(response.data) && response.data.length > 0) {
