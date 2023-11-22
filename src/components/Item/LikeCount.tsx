@@ -16,7 +16,7 @@ const LikeCount: React.FC<LikeCountProps> = ({ itemID, itemCategoriesID, isItemL
 
   useEffect(() => {
     // Make an API request to get the like count for the specified item
-    axios.get(`https://uttc-hakathon-front.vercel.app/items/countlikes?item_id=${itemID}&item_categories_id=${itemCategoriesID}`, {
+    axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/countlikes?item_id=${itemID}&item_categories_id=${itemCategoriesID}`, {
         headers: { Authorization: `Bearer ${Cookies.get('token')}` },
     })
       .then((response) => {

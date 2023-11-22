@@ -34,7 +34,7 @@ const SingleCheckbox: React.FC<SingleCheckboxProps> = ({
 
   useEffect(() => {
     axios
-      .get('https://uttc-hakathon-front.vercel.app/item_categories/showall', {
+      .get('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/item_categories/showall', {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

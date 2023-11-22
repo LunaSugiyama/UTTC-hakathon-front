@@ -61,7 +61,7 @@ const SearchItem: React.FC = () => {
     useEffect(() => {
         const fetchCurriculumData = async () => {
             try {
-                const response = await axios.get('https://uttc-hakathon-front.vercel.app/curriculums/showall', {
+                const response = await axios.get('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/showall', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCurriculumData(response.data);
@@ -77,7 +77,7 @@ const SearchItem: React.FC = () => {
         setSearchResults([]); // Clear search results when the search query changes
         const fetchData = async () => {
           try {
-            const response = await axios.post('https://uttc-hakathon-front.vercel.app/items/search', {
+            const response = await axios.post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/search', {
               words: searchQuery,
               curriculum_ids: selectedCurriculumIds.join(','),
             });
@@ -100,7 +100,7 @@ const SearchItem: React.FC = () => {
     useEffect(() => {
         const fetchItemCategories = () => {
             axios
-              .get(`https://uttc-hakathon-front.vercel.app/item_categories/showall`, {
+              .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/item_categories/showall`, {
                 headers: { Authorization: `Bearer ${token}` }
               })
               .then((response) => {

@@ -10,7 +10,7 @@ const fetchRelatedItems = async (
 ) => {
   const token = Cookies.get('token');
   try {
-    const response = await axios.get(`https://uttc-hakathon-front.vercel.app/items/related`, {
+    const response = await axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/related`, {
       params: { item_id: currentItemId, item_categories_name: currentItemCategoriesName },
       headers: { Authorization: `Bearer ${token}` },
     });

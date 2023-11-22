@@ -54,7 +54,7 @@ const ItemDetails: React.FC = () => {
   const handleDeleteItem = () => {
     if (item) {
       axios
-        .delete(`https://uttc-hakathon-front.vercel.app/${category}/delete`, {
+        .delete(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${category}/delete`, {
           data: { id: item.id }, // Send the ID as raw JSON in the request body
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -81,7 +81,7 @@ const ItemDetails: React.FC = () => {
   const fetchLikeCount = (itemId: number, itemCategoriesId: number) => {
     // Make an API request to get the like count for the specified item
     axios
-      .get(`https://uttc-hakathon-front.vercel.app/items/countlikes?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
+      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/countlikes?item_id=${itemId}&item_categories_id=${itemCategoriesId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -94,7 +94,7 @@ const ItemDetails: React.FC = () => {
 
   const fetchComments = (itemId: number, itemCategoriesId: number) => {
     axios
-      .get(`https://uttc-hakathon-front.vercel.app/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`)
+      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/comments/get?item_id=${itemId}&item_categories_id=${itemCategoriesId}`)
       .then((response) => {
         setComments(response.data.comments);
       })
@@ -109,7 +109,7 @@ const ItemDetails: React.FC = () => {
 
       // Fetch item details based on the ID from the URL
       axios
-        .get(`https://uttc-hakathon-front.vercel.app/${category}/get?id=${itemId}`, {
+        .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${category}/get?id=${itemId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -130,7 +130,7 @@ const ItemDetails: React.FC = () => {
       // Map through curriculum_ids and fetch curriculum names for each ID
       Promise.all(
         item.curriculum_ids.map((curriculumId) =>
-          axios.get(`https://uttc-hakathon-front.vercel.app/curriculums/get?id=${curriculumId}`, {
+          axios.get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/get?id=${curriculumId}`, {
             headers: { Authorization: `Bearer ${token}` },
           })
         )

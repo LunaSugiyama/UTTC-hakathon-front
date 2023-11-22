@@ -40,7 +40,7 @@ const SignupForm: React.FC = () => {
         firebase_uid, // Include the firebase_uid in the user data
       };
 
-      const response = await axios.post('https://uttc-hakathon-front.vercel.app/users/register', userData);
+      const response = await axios.post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/register', userData);
       if (response.status === 200 || response.status === 201) {
         console.log('ユーザー作成成功');
         navigate('/login')
