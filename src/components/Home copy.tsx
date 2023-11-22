@@ -49,7 +49,7 @@ const Home: React.FC = () => {
 
     axios
       .get(
-        `https://uttc-hakathon-front.vercel.app/items/showall?sort=${sort}&order=${order}&item_categories=${ItemCategoriesIds.join(',')}&curriculum_ids=${selectedCurriculumIds.join(',')}&page=${page}&page_size=${page_size}`, {
+        `https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/items/showall?sort=${sort}&order=${order}&item_categories=${ItemCategoriesIds.join(',')}&curriculum_ids=${selectedCurriculumIds.join(',')}&page=${page}&page_size=${page_size}`, {
           headers: { Authorization: `Bearer ${token}` }
         }
       )
@@ -65,7 +65,7 @@ const Home: React.FC = () => {
 
   const fetchCurriculumData = () => {
     axios
-      .get(`https://uttc-hakathon-front.vercel.app/curriculums/showall`, {
+      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/showall`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then((response) => {
@@ -79,7 +79,7 @@ const Home: React.FC = () => {
 
   const fetchItemCategories = () => {
     axios
-      .get(`https://uttc-hakathon-front.vercel.app/item_categories/showall`, {
+      .get(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/item_categories/showall`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then((response) => {

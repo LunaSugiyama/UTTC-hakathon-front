@@ -63,7 +63,7 @@ const CurriculumCheckbox: React.FC<CurriculumCheckboxProps> = ({
   useEffect(() => {
     // Fetch curriculum data when the component mounts
     axios
-      .get('https://uttc-hakathon-front.vercel.app/curriculums/showall', {
+      .get('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/showall', {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

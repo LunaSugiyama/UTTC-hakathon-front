@@ -200,7 +200,7 @@ const handleSubmit = async () => {
       };
 
       axios
-        .post(`https://uttc-hakathon-front.vercel.app/${formData.item_categories_name}/create`, dataToSend, {
+        .post(`https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/${formData.item_categories_name}/create`, dataToSend, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {

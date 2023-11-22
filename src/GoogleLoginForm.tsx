@@ -55,7 +55,7 @@ export const GoogleLoginForm: React.FC = () => {
     console.log("saveUserDataOnServer")
     try {
       // Make an API request to save user data on the server
-      const response = await fetch('https://uttc-hakathon-front.vercel.app/users/register', {
+      const response = await fetch('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

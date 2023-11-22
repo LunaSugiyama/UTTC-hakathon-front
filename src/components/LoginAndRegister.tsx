@@ -71,7 +71,7 @@ const LoginAndRegister: React.FC = () => {
         Cookies.set('token', idToken, { expires: 1 / 24 }); // Set cookie to expire in 1 hour
 
         axios 
-          .post('https://uttc-hakathon-front.vercel.app/users/login', {uid, idToken}, { 
+          .post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/login', {uid, idToken}, { 
           headers: { Authorization: `Bearer ${idToken}` } // Fixed the header format 
           }) 
           .then((response) => { 
