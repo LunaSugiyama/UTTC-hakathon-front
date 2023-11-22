@@ -1,6 +1,6 @@
 export interface ItemDetails {
     id: number;
-    user_id: number;
+    user_firebase_uid: number;
     title: string;
     author: string;
     link: string;

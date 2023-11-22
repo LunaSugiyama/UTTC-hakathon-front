@@ -28,8 +28,8 @@ const AddBlog = () => {
     }
 
     try {
-      const response = await axios.post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/addBlog', {
-        user_id: user.uid, // Use the Firebase User ID
+      const response = await axios.post('https://uttc-hakathon-front.vercel.app/addBlog', {
+        user_firebase_uid: user.uid, // Use the Firebase User ID
         link: link,
       });
       setMessage(response.data.message);

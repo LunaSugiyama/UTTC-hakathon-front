@@ -69,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     const token = Cookies.get('token'); // Get your token here
     axios
-      .get('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/curriculums/showall', {
+      .get('https://uttc-hakathon-front.vercel.app/curriculums/showall', {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

@@ -26,7 +26,7 @@ const LoginComponent: React.FC = () => {
         Cookies.set('uid', uid, { expires: 1 / 24 }); // Expires in 1 hour
 
         axios 
-          .post('https://uttc-hackathon-back1-lv2ftadd7a-uc.a.run.app/users/login', {uid, idToken}, { 
+          .post('https://uttc-hakathon-front.vercel.app/users/login', {uid, idToken}, { 
           headers: { Authorization: `Bearer ${idToken}` } // Fixed the header format 
           }) 
           .then((response) => { 
