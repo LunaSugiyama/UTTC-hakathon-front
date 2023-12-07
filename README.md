@@ -1,46 +1,32 @@
-# Getting Started with Create React App
+# My Knowledgebase 
+These are the screen shots of how my website looks like.
+I used 
+- Firebase Authentication
+- Firebase Cloud Storage
+- Vercel
+- Google Cloud Platform
+- golang
+- typescript (react)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Login Register Page
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/8a5149ce-214e-40b5-a247-c9b9327b2acc)
 
-## Available Scripts
+# Home Page
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/a71751f9-e3d8-41c9-b42f-91bf2acd8cce)
+# Pressing Apply Filter Button
+You can filter the search results.
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/9343d4ae-9f5c-4896-a5c6-4b581fe0d9cc)
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/b1c85dff-3fdb-46ed-83be-41dad6111338)
 
-In the project directory, you can run:
+# Item Detail Page
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/57c05b3a-38ed-4234-be20-0eeb5bc5df4f)
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Create Item Page
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/2b895adb-b0de-427f-bd44-83350d5d3223)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Edit Curriculum Page
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/718a5a62-f862-4a4f-95ba-fcf169ff0777)
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+# User Page
+![image](https://github.com/LunaSugiyama/UTTC-hakathon-front/assets/92561883/a14555c6-4966-4cf8-8d8f-a0f9487a8616)
